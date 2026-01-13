@@ -1,36 +1,146 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🛡️ AI Compliance Agent & Forensic Audit Platform
 
-## Getting Started
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Next.js](https://img.shields.io/badge/Next.js-14-black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
+![Tailwind](https://img.shields.io/badge/Tailwind-3.0-cyan)
+![Prisma](https://img.shields.io/badge/Prisma-ORM-green)
 
-First, run the development server:
+A robust, AI-driven SaaS platform designed to automate forensic audits, assess vendor compliance risks, and streamline invoice processing. This application provides real-time dashboards, risk visualization, and "One-Click" audit solutions for businesses.
+
+## 🚀 Features
+
+### 📊 Interactive Dashboard
+- **Real-time Metrics:** Instant view of total invoices scanned, high-risk alerts, overall health score, and potential cost savings.
+- **Dynamic Visualizations:** Interactive charts powered by `Recharts` to track risk trends and financial data over time.
+- **Recent Activity:** Live feed of recent forensic logs with vendor details and risk levels.
+
+### 🔍 Forensic Audit Engine
+- **Automated Risk Assessment:** AI-driven classification of vendors/invoices into **HIGH**, **MEDIUM**, and **LOW** risk categories.
+- **Vendor Profiling:** Dedicated pages for detailed vendor history and compliance scores.
+- **Invoice Scanning:** Support for PDF uploads and data extraction (OCR/AI analysis).
+
+### 🛠️ Technical Highlights
+- **Server Actions:** deeply integrated Next.js 14 Server Actions for seamless backend logic.
+- **Database Optimization:** Efficient querying using Prisma ORM with PostgreSQL.
+- **Responsive UI:** Mobile-first design using Tailwind CSS and Lucide Icons.
+
+---
+
+## 💻 Tech Stack
+
+| Category | Technology |
+| :--- | :--- |
+| **Framework** | [Next.js 14 (App Router)](https://nextjs.org/) |
+| **Language** | [TypeScript](https://www.typescriptlang.org/) |
+| **Styling** | [Tailwind CSS](https://tailwindcss.com/) |
+| **UI Components** | [Shadcn UI](https://ui.shadcn.com/) / Lucide React |
+| **Database** | [PostgreSQL](https://www.postgresql.org/) |
+| **ORM** | [Prisma](https://www.prisma.io/) |
+| **Authentication** | [Clerk](https://clerk.com/) |
+| **Charts** | [Recharts](https://recharts.org/) |
+| **AI / Logic** | [LangChain](https://js.langchain.com/) / Custom AI Logic |
+| **Utilities** | `date-fns`, `clsx`, `tailwind-merge` |
+
+---
+
+## ⚙️ Environment Variables
+
+To run this project efficiently, you will need to add the following environment variables to your `.env` file:
+
+```bash
+# Database Connection
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE"
+
+# Authentication (Clerk)
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+
+# AI Services (If applicable)
+OPENAI_API_KEY=sk-...
+PINECONE_API_KEY=...
+PINECONE_INDEX=...
+
+# App Configuration
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
+
+```
+
+---
+
+## 📦 Getting Started
+
+Follow these steps to set up the project locally.
+
+### 1. Clone the Repository
+
+```bash
+git clone [https://github.com/your-username/compliance-agent.git](https://github.com/your-username/compliance-agent.git)
+cd compliance-agent
+
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+
+```
+
+### 3. Setup Database
+
+Ensure you have a PostgreSQL instance running, then generate the Prisma client.
+
+```bash
+npx prisma generate
+npx prisma db push
+
+```
+
+### 4. Run the Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](https://www.google.com/search?q=http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📂 Project Structure
 
-## Learn More
+```text
+├── actions/             # Server actions (Backend logic)
+├── app/                 # Next.js App Router pages
+├── components/          # Reusable UI components
+│   ├── ui/              # Shadcn primitive components
+│   └── ...              # Custom project components (RiskChart, etc.)
+├── lib/                 # Utility functions (db.ts, utils.ts)
+├── prisma/              # Database schema
+├── public/              # Static assets
+└── styles/              # Global styles
 
-To learn more about Next.js, take a look at the following resources:
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🤝 Contributing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Contributions are welcome! Please follow these steps:
 
-## Deploy on Vercel
+1. Fork the project.
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
+4. Push to the branch (`git push origin feature/AmazingFeature`).
+5. Open a Pull Request.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📄 License
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Distributed under the MIT License. See `LICENSE` for more information.
+
+```
+
+```
