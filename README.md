@@ -34,12 +34,11 @@ A robust, AI-driven SaaS platform designed to automate forensic audits, assess v
 | **Framework** | [Next.js 14 (App Router)](https://nextjs.org/) |
 | **Language** | [TypeScript](https://www.typescriptlang.org/) |
 | **Styling** | [Tailwind CSS](https://tailwindcss.com/) |
-| **UI Components** | [Shadcn UI](https://ui.shadcn.com/) / Lucide React |
+| **UI Components** | Lucide React |
 | **Database** | [PostgreSQL](https://www.postgresql.org/) |
 | **ORM** | [Prisma](https://www.prisma.io/) |
-| **Authentication** | [Clerk](https://clerk.com/) |
 | **Charts** | [Recharts](https://recharts.org/) |
-| **AI / Logic** | [LangChain](https://js.langchain.com/) / Custom AI Logic |
+| **AI / Logic** | Gemini API KEY / Custom AI Logic |
 | **Utilities** | `date-fns`, `clsx`, `tailwind-merge` |
 
 ---
@@ -51,15 +50,6 @@ To run this project efficiently, you will need to add the following environment 
 ```bash
 # Database Connection
 DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE"
-
-# Authentication (Clerk)
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
-CLERK_SECRET_KEY=sk_test_...
-
-# AI Services (If applicable)
-OPENAI_API_KEY=sk-...
-PINECONE_API_KEY=...
-PINECONE_INDEX=...
 
 # App Configuration
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
@@ -75,7 +65,7 @@ Follow these steps to set up the project locally.
 ### 1. Clone the Repository
 
 ```bash
-git clone [https://github.com/your-username/compliance-agent.git](https://github.com/your-username/compliance-agent.git)
+git clone [https://github.com/your-username/compliance-agent.git](https://github.com/rajrituroy2005/compliance-agent.git)
 cd compliance-agent
 
 ```
