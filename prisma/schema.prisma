@@ -3,39 +3,37 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL") 
-  directUrl = env("DIRECT_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")   // Transaction Mode (Port 6543)
+  directUrl = env("DIRECT_URL")     // Direct Mode (Port 5432) for Migrations
 }
 
-
 model User {
-  id           String   @id @default(uuid())
-  email        String   @unique
+  id           String      @id @default(uuid()) // Can be auto-generated or provided manually
+  email        String      @unique
   name         String?
   businessName String?
   gstNumber    String?
   invoices     Invoice[]
   risks        RiskAlert[]
-  createdAt    DateTime @default(now())
+  createdAt    DateTime    @default(now())
 }
 
 model Invoice {
-  id          String   @id @default(uuid())
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
-  currency    String   @default("INR")
+  id                  String   @id @default(uuid())
+  userId              String
+  user                User     @relation(fields: [userId], references: [id])
+  currency            String   @default("INR")
   
   // Basic Fields
-  amount      Float
-  invoiceDate DateTime
-  dueDate     DateTime
-  status      String   @default("PENDING")
-  vendorName  String?
- 
+  amount              Float
+  invoiceDate         DateTime
+  dueDate             DateTime
+  status              String   @default("PENDING")
+  vendorName          String?
   
   // AI Extracted Data
-  aiSummary   String? 
+  aiSummary           String? 
   
   // New Forensic Fields
   isGstMissing        Boolean  @default(false)
@@ -44,7 +42,7 @@ model Invoice {
   complianceRiskLevel String?  // LOW, MEDIUM, HIGH
   legalImpact         String?
   
-  createdAt   DateTime @default(now())
+  createdAt           DateTime @default(now())
 }
 
 model RiskAlert {
@@ -54,6 +52,6 @@ model RiskAlert {
   title      String
   message    String
   severity   String
-  isResolved Boolean @default(false)
+  isResolved Boolean  @default(false)
   createdAt  DateTime @default(now())
 }

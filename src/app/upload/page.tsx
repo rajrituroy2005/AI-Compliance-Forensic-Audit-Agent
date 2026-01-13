@@ -138,7 +138,7 @@ export default function UploadPage() {
             <h1 className="text-xl font-bold flex items-center gap-2">
               <UploadCloud className="text-amber-400" /> Upload Invoice
             </h1>
-            <p className="text-slate-400 text-sm mt-1">AI Forensic Scan (Gemini 1.5 Pro)</p>
+            <p className="text-slate-400 text-sm mt-1">AI Forensic Scan</p>
           </div>
 
           <div className="p-8">
@@ -222,7 +222,7 @@ export default function UploadPage() {
 
                 <div className="flex gap-3">
                   <button onClick={() => setStatus("IDLE")} className="flex-1 py-3 text-slate-600 font-bold hover:bg-slate-50 rounded-lg border border-slate-200">Discard</button>
-                  <button onClick={handleSave} className="flex-1 py-3 bg-amber-500 text-white font-bold rounded-lg hover:bg-amber-600 shadow-lg shadow-amber-200 transition-all">
+                  <button onClick={handleSave} className="flex-1 py-3 bg-amber-500 text-white font-bold rounded-lg hover:bg-amber-600 shadow-lg shadow-amber-200 transition-all cursor-pointer">
                     Generate Forensic Report
                   </button>
                 </div>
