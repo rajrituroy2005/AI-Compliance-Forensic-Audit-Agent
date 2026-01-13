@@ -1,60 +1,60 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
+import { prisma } from "@/lib/prisma"; // Make sure this matches your project structure
 
-// Define the shape of data we expect from the frontend
-interface InvoiceData {
-  vendorName: string;
-  amount: number; // This must be a number!
-  invoiceDate: Date;
-  dueDate: Date;
-  aiSummary: string;
-  status: string;
-  currency: string;
-  isGstMissing: boolean;
-  isRegulatoryItem: boolean;
-  requiresLicense: boolean;
-  complianceRiskLevel: string;
-  legalImpact: string;
-  userId: string;
-}
+export async function saveInvoice(invoiceData: any) {
+  console.log("--- 🟢 STARTING TRANSACTION SAVE (NUCLEAR FIX) ---");
 
-export async function saveInvoice(data: InvoiceData) {
+  // A fixed ID to ensure consistency (Since no Clerk/Auth is active)
+  const MASTER_ID = "user_master_v1";
+
   try {
-    // 1. Validate Amount (Prevent NaN errors)
-    // If amount is missing or invalid, default to 0
-    const finalAmount = isNaN(data.amount) ? 0 : data.amount;
+    // We use a TRANSACTION to force 'Create User' + 'Create Invoice' to happen together.
+    const result = await prisma.$transaction(async (tx) => {
+      
+      // STEP 1: Ensure User Exists (Using 'tx', not 'prisma')
+      const user = await tx.user.upsert({
+        where: { id: MASTER_ID },
+        update: {}, 
+        create: {
+          id: MASTER_ID,
+          email: "admin@demo.com",
+          name: "System Admin",
+          businessName: "Compliance Corp"
+        },
+      });
+      console.log("✅ Step 1: User Verified ->", user.id);
 
-    console.log("Saving Invoice for:", data.vendorName, "Amount:", finalAmount);
-
-    // 2. Save to Database
-    const newInvoice = await prisma.invoice.create({
-      data: {
-        userId: data.userId,
-        vendorName: data.vendorName,
-        amount: finalAmount, // <--- THIS WAS MISSING OR UNDEFINED BEFORE
-        invoiceDate: data.invoiceDate,
-        dueDate: data.dueDate,
-        aiSummary: data.aiSummary || "No summary provided", // Safety fallback
-        status: data.status,
-        currency: data.currency,
-        isGstMissing: data.isGstMissing,
-        isRegulatoryItem: data.isRegulatoryItem,
-        requiresLicense: data.requiresLicense,
-        complianceRiskLevel: data.complianceRiskLevel,
-        legalImpact: data.legalImpact,
-      },
+      // STEP 2: Create Invoice (Linked to the User from Step 1)
+      const invoice = await tx.invoice.create({
+        data: {
+          userId: user.id, // <--- This links them perfectly
+          
+          // Data from the form/AI
+          amount: invoiceData.amount || 0,
+          invoiceDate: new Date(invoiceData.invoiceDate || new Date()),
+          dueDate: new Date(invoiceData.dueDate || new Date()),
+          vendorName: invoiceData.vendorName || "Unknown Vendor",
+          status: "COMPLETED",
+          
+          // AI Fields
+          aiSummary: invoiceData.aiSummary || "",
+          isGstMissing: Boolean(invoiceData.isGstMissing),
+          isRegulatoryItem: Boolean(invoiceData.isRegulatoryItem),
+          requiresLicense: Boolean(invoiceData.requiresLicense),
+          complianceRiskLevel: invoiceData.complianceRiskLevel || "LOW",
+          legalImpact: invoiceData.legalImpact || "None",
+        },
+      });
+      console.log("✅ Step 2: Invoice Created ->", invoice.id);
+      
+      return invoice;
     });
 
-    // 3. Refresh the history page so the new data shows up immediately
-    revalidatePath("/history");
-    revalidatePath("/"); // Refresh dashboard too
-
-    return { success: true, invoice: newInvoice };
+    return { success: true, data: result };
 
   } catch (error) {
-    console.error("Database Error:", error);
-    throw error; // This sends the error back to the frontend so you can see it
+    console.error("❌ TRANSACTION FAILED:", error);
+    throw error; 
   }
 }
