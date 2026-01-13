@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  name         String?
+  businessName String?
+  gstNumber    String?
+  invoices     Invoice[]
+  risks        RiskAlert[]
+  createdAt    DateTime @default(now())
+}
+
+model Invoice {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  currency    String   @default("INR")
+  
+  // Basic Fields
+  amount      Float
+  invoiceDate DateTime
+  dueDate     DateTime
+  status      String   @default("PENDING")
+  vendorName  String?
+ 
+  
+  // AI Extracted Data
+  aiSummary   String? 
+  
+  // New Forensic Fields
+  isGstMissing        Boolean  @default(false)
+  isRegulatoryItem    Boolean  @default(false)
+  requiresLicense     Boolean  @default(false)
+  complianceRiskLevel String?  // LOW, MEDIUM, HIGH
+  legalImpact         String?
+  
+  createdAt   DateTime @default(now())
+}
+
+model RiskAlert {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  title      String
+  message    String
+  severity   String
+  isResolved Boolean @default(false)
+  createdAt  DateTime @default(now())
+}
