@@ -222,7 +222,7 @@ export default function UploadPage() {
 
                 <div className="flex gap-3">
                   <button onClick={() => setStatus("IDLE")} className="flex-1 py-3 text-slate-600 font-bold hover:bg-slate-50 rounded-lg border border-slate-200">Discard</button>
-                  <button onClick={handleSave} className="flex-1 py-3 bg-amber-500 text-white font-bold rounded-lg hover:bg-amber-600 shadow-lg shadow-amber-200 transition-all cursor-pointer">
+                  <button onClick={handleSave} className="flex-1 py-3 bg-amber-500 text-white font-bold rounded-lg hover:bg-amber-600 shadow-lg shadow-amber-200 transition-all cursor-po">
                     Generate Forensic Report
                   </button>
                 </div>

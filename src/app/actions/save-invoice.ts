@@ -1,18 +1,20 @@
 "use server";
 
-import { prisma } from "@/lib/prisma"; // Make sure this matches your project structure
+import { prisma } from "@/lib/prisma"; // ⚠️ Check this import path (see note below)
 
 export async function saveInvoice(invoiceData: any) {
   console.log("--- 🟢 STARTING TRANSACTION SAVE (NUCLEAR FIX) ---");
 
-  // A fixed ID to ensure consistency (Since no Clerk/Auth is active)
+  // We use a fixed ID for now to guarantee it works without Auth
   const MASTER_ID = "user_master_v1";
 
   try {
-    // We use a TRANSACTION to force 'Create User' + 'Create Invoice' to happen together.
+    // START TRANSACTION
+    // This forces Step 1 and Step 2 to happen together.
     const result = await prisma.$transaction(async (tx) => {
       
-      // STEP 1: Ensure User Exists (Using 'tx', not 'prisma')
+      // STEP 1: Ensure the User Exists
+      // We use 'tx' (transaction client) instead of 'prisma'
       const user = await tx.user.upsert({
         where: { id: MASTER_ID },
         update: {}, 
@@ -25,19 +27,19 @@ export async function saveInvoice(invoiceData: any) {
       });
       console.log("✅ Step 1: User Verified ->", user.id);
 
-      // STEP 2: Create Invoice (Linked to the User from Step 1)
+      // STEP 2: Create the Invoice linked to that User
       const invoice = await tx.invoice.create({
         data: {
-          userId: user.id, // <--- This links them perfectly
+          userId: user.id, // <--- This is the Critical Link
           
-          // Data from the form/AI
+          // Map the data from your frontend
           amount: invoiceData.amount || 0,
           invoiceDate: new Date(invoiceData.invoiceDate || new Date()),
           dueDate: new Date(invoiceData.dueDate || new Date()),
           vendorName: invoiceData.vendorName || "Unknown Vendor",
           status: "COMPLETED",
           
-          // AI Fields
+          // AI & Forensic Fields
           aiSummary: invoiceData.aiSummary || "",
           isGstMissing: Boolean(invoiceData.isGstMissing),
           isRegulatoryItem: Boolean(invoiceData.isRegulatoryItem),
@@ -51,10 +53,11 @@ export async function saveInvoice(invoiceData: any) {
       return invoice;
     });
 
-    return { success: true, data: result };
+    return { success: true, invoice: result };
 
   } catch (error) {
     console.error("❌ TRANSACTION FAILED:", error);
+    // Return null so the frontend shows the error message
     throw error; 
   }
 }
