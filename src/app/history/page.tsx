@@ -1,5 +1,5 @@
 
-
+export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/prisma"; // The file we just fixed
 import HistoryTable from "@/components/HistoryTable"; // Or wherever your client component is
 import Link from "next/link";
