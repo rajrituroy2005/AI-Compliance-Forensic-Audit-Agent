@@ -1,39 +1,43 @@
-
 export const dynamic = "force-dynamic";
-import { prisma } from "@/lib/prisma"; // The file we just fixed
-import HistoryTable from "@/components/HistoryTable"; // Or wherever your client component is
+
+import { prisma } from "@/lib/prisma"; 
+import HistoryTable from "@/components/HistoryTable"; 
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-// If HistoryTable is defined in this same file, just separate them.
 
 export default async function HistoryPage() {
-  // 1. Fetch data from Database
+  // 1. Define the Master ID (Must match the one in save-invoice.ts)
+  const MASTER_ID = "user_master_v1";
+
+  // 2. Fetch invoices ONLY for this user
   const invoices = await prisma.invoice.findMany({
+    where: {
+      userId: MASTER_ID, // <--- Crucial filter to see the right data
+    },
     orderBy: {
-      createdAt: 'desc', // Sort by newest first
+      createdAt: 'desc', 
     },
   });
 
-  // 2. Hardcode a User ID for now (since we don't have auth setup yet)
-  const userId = "12103305-ddd7-4155-aa6c-65b56766d3a4"; 
-
-  // 3. Pass data to the Client Component
+  // 3. Render the Page
   return (
-    <div className="container mx-auto py-10">
-      <h1 className="text-2xl font-bold mb-5">Audit History</h1>
-      {/* --- NEW BACK BUTTON --- */}
-      <div className="mb-6">
-        <Link 
-          href="/" 
-          className="flex items-center text-gray-500 hover:text-gray-900 transition-colors"
-        >
-          <ArrowLeft size={20} className="mr-2" />
-          Back to Dashboard
-        </Link>
+    <div className="min-h-screen bg-[#fafaf9] p-6">
+      <div className="container mx-auto max-w-5xl">
+        
+        {/* Back Button */}
+        <div className="mb-8">
+          <Link 
+            href="/" 
+            className="inline-flex items-center text-slate-500 hover:text-slate-900 transition-colors font-medium"
+          >
+            <ArrowLeft size={20} className="mr-2" />
+            Back to Dashboard
+          </Link>
+        </div>
+        
+        {/* FIX: Removed 'userId={...}' because HistoryTable doesn't need it anymore */}
+        <HistoryTable invoices={invoices} />
       </div>
-      
-      {/* Pass the data here! */}
-      <HistoryTable invoices={invoices} userId={userId} />
     </div>
   );
 }

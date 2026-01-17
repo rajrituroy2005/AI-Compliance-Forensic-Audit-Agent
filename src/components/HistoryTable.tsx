@@ -19,7 +19,7 @@ const getRiskBadge = (level: string) => {
   }
 };
 
-export default function HistoryTable({ invoices = [], userId }: { invoices: any[], userId: string }) {
+export default function HistoryTable({ invoices = [] }: { invoices: any[] }) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async (id: string) => {
@@ -32,7 +32,10 @@ export default function HistoryTable({ invoices = [], userId }: { invoices: any[
   const handleClearAll = async () => {
     if (!confirm("WARNING: This will delete ALL your invoice history. This cannot be undone.")) return;
     setIsDeleting(true);
-    await clearAllHistory(userId);
+    
+    // Updated: No longer needs arguments, it knows which User ID to wipe
+    await clearAllHistory(); 
+    
     setIsDeleting(false);
   };
 

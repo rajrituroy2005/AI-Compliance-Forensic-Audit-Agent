@@ -1,26 +1,30 @@
-'use server';
+"use server";
 
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
 
 export async function getInvoices() {
+  // 1. MUST MATCH THE ID USED IN 'save-invoice.ts'
+  const MASTER_ID = "user_master_v1";
+
   try {
-    // 1. Fetch invoices and include the related User info
-    // We order by 'createdAt' descending (newest first)
+    // 2. Fetch invoices ONLY for this Master User
     const invoices = await prisma.invoice.findMany({
-      orderBy: {
-        createdAt: 'desc',
+      where: {
+        userId: MASTER_ID, // <--- This ensures we find what we just saved
       },
+      orderBy: {
+        createdAt: "desc", // Show newest uploads first
+      },
+      // Include the User relation if needed (optional)
       include: {
-        user: true, // Also get the user details if needed
+        user: true, 
       }
     });
 
     return { success: true, data: invoices };
 
   } catch (error) {
-    console.error("Failed to fetch invoices:", error);
-    return { success: false, error: "Failed to load history" };
+    console.error("Failed to fetch history:", error);
+    return { success: false, data: [] };
   }
 }
